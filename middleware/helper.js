@@ -26,5 +26,23 @@ const generateTaskID = async () => {
         throw error; // Re-throw the error to handle it in calling functions
     }
 };
+const jwt = require('jsonwebtoken')
 
-module.exports = generateTaskID;
+const verifyToken = (req,res,next)=>{
+    const Bearer_token = req.headers['authorization'];
+    if(!Bearer_token || !Bearer_token.startsWith('Bearer')){
+        return res.status(404).send("No token found")
+    }
+    try {
+        const token = Bearer_token.split(' ')[1]
+        const decodeToken = jwt.verify(token,process.env.secretKey_JWT);
+        req.user = decodeToken;
+        console.log(decodeToken)
+        next()
+
+    } catch (error) {
+       return res.status(500).send(error) 
+    }
+    
+}
+module.exports = {generateTaskID,verifyToken};
