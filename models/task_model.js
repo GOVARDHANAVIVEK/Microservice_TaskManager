@@ -46,7 +46,8 @@ const taskSchema = new mongoose.Schema({
     TaskId:{
         type:String,
         required:false
-    }
+    },
+    ProjectId: { type: String, ref: 'Project Name', required: false }
 });
 
 const Tasks = mongoose.model('Tasks',taskSchema);

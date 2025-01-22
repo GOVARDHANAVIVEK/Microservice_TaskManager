@@ -37,6 +37,7 @@ const verifyToken = (req,res,next)=>{
         const token = Bearer_token.split(' ')[1]
         const decodeToken = jwt.verify(token,process.env.secretKey_JWT);
         req.user = decodeToken;
+        req.token = token
         console.log(decodeToken)
         next()
 
@@ -45,4 +46,29 @@ const verifyToken = (req,res,next)=>{
     }
     
 }
-module.exports = {generateTaskID,verifyToken};
+const verifyRole = (allowedRoles)=>{
+    return (req,res,next)=>{
+        try {
+            const role = req.user.Role;
+            if(allowedRoles.includes(role)){
+                return next()
+            }
+            res.status(403).json({
+                message: "Access denied. Insufficient permissions."
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Internal server error.",
+                error: error.message
+            });
+        }
+    }
+    
+
+}
+
+
+
+
+
+module.exports = {generateTaskID,verifyToken,verifyRole};
