@@ -70,10 +70,16 @@ router.post('/createTask',verifyToken,verifyRole(['Project_Manager','Admin']),as
             data:newTask
         })
     } catch (error) {
-        return res.status(400).send('Task creation failed.')
+        return res.status(400).json({
+            message:'Task creation failed.',
+            Error:error
+        })
     }
     } catch (error) {
-        return res.status(500).send('Internal Server error.')  
+        return res.status(500).json({
+            message:'Internal Server error',
+            Error:error
+        })
     }
 });
 
